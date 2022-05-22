@@ -24,14 +24,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
+    - uses: ilammy/msvc-dev-cmd@v1
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
-    
-    - name: Build
+      
+    - name: Build something requiring CL.EXE
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: |
-        %comspec% /k "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
+        cmake -G "NMake Makefiles" .
         nmake
