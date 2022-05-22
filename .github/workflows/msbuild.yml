@@ -40,3 +40,8 @@ jobs:
       run: |
         cmake -G "NMake Makefiles" .
         nmake
+    - name: Upload a Build Artifact(yuzaos)
+      uses: actions/upload-artifact@v2.1.4
+      with:
+          name: sanos
+          path: win/img
