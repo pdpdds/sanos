@@ -18,7 +18,7 @@
 
 static char snprintf_buffer[BUFFER_SIZE];
 
-int vsnprintf(char *str, size_t size, const char *format, va_list ap)
+/*int vsnprintf(char *str, size_t size, const char *format, va_list ap)
 {
     int rv, bytes;
 
@@ -43,4 +43,4 @@ int vsnprintf(char *str, size_t size, const char *format, va_list ap)
     }
 
     return rv;
-}
+}*/

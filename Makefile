@@ -55,14 +55,17 @@ DEFS=
 # MSVC=9  for Microsoft Visual Visual Studio 2008
 # MSVC=10 for Microsoft Visual Visual Studio 2010
 # MSVC=11 for Microsoft Visual Visual Studio 2012
+# MSVC=15 for Microsoft Visual Visual Studio 2019
 
 !IFNDEF MSVC
-MSVC=7
+MSVC=15
 !ENDIF
 
 AFLAGS=/nologo
 
-!IF $(MSVC) == 11
+!IF $(MSVC) == 15
+CFLAGS=/nologo /O2 /Ob1 /Oi- /Ot /Oy /GS- /GR- /X /GF /Gy /W3 /arch:IA32 /I $(SRC)/include $(DEFS)
+!ELSEIF $(MSVC) == 11
 CFLAGS=/nologo /O2 /Ob1 /Oi /Ot /Oy /GS- /GR- /X /GF /Gy /W3 /arch:IA32 /I $(SRC)/include $(DEFS)
 !ELSEIF $(MSVC) == 8 || $(MSVC) == 9 || $(MSVC) == 10
 CFLAGS=/nologo /O2 /Ob1 /Oi /Ot /Oy /GS- /GR- /X /GF /Gy /W3 /I $(SRC)/include $(DEFS)
@@ -203,7 +206,9 @@ clean:
 # /I $(SRC)/include     Include search path
 #
 
-!IF $(MSVC) == 9 || $(MSVC) == 10
+!IF $(MSVC) == 15
+WIN32CFLAGS=/nologo /O2 /Ob1 /Oy /GF /GS- /GR- /MT /Gy /W3 /TC /D WIN32 /D NDEBUG /D _CONSOLE /D _MBCS /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _USE_32BIT_TIME_T
+!ELSEIF $(MSVC) == 9 || $(MSVC) == 10
 WIN32CFLAGS=/nologo /O2 /Ob1 /Oy /Oi /GF /GS- /GR- /MT /Gy /W3 /TC /D WIN32 /D NDEBUG /D _CONSOLE /D _MBCS /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _USE_32BIT_TIME_T
 !ELSEIF $(MSVC) == 8
 WIN32CFLAGS=/nologo /O2 /Ob1 /Oy /Oi /GF /GS- /GR- /MT /Gy /W3 /TC /D WIN32 /D NDEBUG /D _CONSOLE /D _MBCS /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _USE_32BIT_TIME_T
@@ -328,11 +333,11 @@ $(OBJ)/krnl/lldiv.obj: $(SRC)/lib/lldiv.asm
 
 $(OBJ)/krnl/llmul.obj: $(SRC)/lib/llmul.asm
     $(AS) $(AFLAGS) /c /Fo$@ $**
-
-$(OBJ)/krnl/lldvrm.obj: $(SRC)/lib/lldvrm.asm
+	
+$(OBJ)/krnl/llrem.obj: $(SRC)/lib/llrem.asm
     $(AS) $(AFLAGS) /c /Fo$@ $**
 
-$(OBJ)/krnl/llrem.obj: $(SRC)/lib/llrem.asm
+$(OBJ)/krnl/lldvrm.obj: $(SRC)/lib/lldvrm.asm
     $(AS) $(AFLAGS) /c /Fo$@ $**
 
 $(OBJ)/krnl/krnl.res: $(SRC)/sys/krnl/krnl.rc
@@ -476,6 +481,7 @@ $(LIBS)/os.lib $(INSTALL)/boot/os.dll: \
   $(SRC)/lib/bitops.c \
   $(SRC)/lib/verinfo.c \
   $(SRC)/lib/crypt.c \
+  $(SRC)/lib/_aulldvrm.c \
   $(OBJ)/libc/llmul.obj \
   $(OBJ)/libc/lldvrm.obj \
   $(OBJ)/os/modf.obj \
@@ -1030,6 +1036,7 @@ $(INSTALL)/bin/msvcrt.dll: \
   $(SRC)/lib/fcvt.c \
   $(SRC)/lib/ctype.c \
   $(SRC)/lib/bsearch.c \
+  $(SRC)/lib/_aulldvrm.c \
   $(OBJ)/msvcrt/fpconst.obj \
   $(OBJ)/msvcrt/floor.obj \
   $(OBJ)/msvcrt/fmod.obj \
@@ -1536,6 +1543,9 @@ $(OBJ)/crt/strtod.o: $(SRC)/lib/strtod.c
 
 $(OBJ)/crt/strtol.o: $(SRC)/lib/strtol.c
     $(TCC) -c $** -o $@ -I$(SRC)/include -g
+	
+$(OBJ)/crt/_aulldvrm.o: $(SRC)/lib/_aulldvrm.c
+    $(TCC) -c $** -o $@ -I$(SRC)/include -g	
 
 $(OBJ)/crt/termios.o: $(SRC)/lib/termios.c
     $(TCC) -c $** -o $@ -I$(SRC)/include -g
