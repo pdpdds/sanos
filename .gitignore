@@ -12,6 +12,7 @@ linux/**/*
 *.dll
 *.exp
 *.lib
+*.log
 krnl.def
 os.def
 win/
