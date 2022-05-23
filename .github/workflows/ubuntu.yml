@@ -16,6 +16,7 @@ jobs:
     - name: make
       run: |
         sudo apt-get install g++-multilib libc6-dev-i386
+        sudo apt-get install genisoimage
         make -f Makefile.linux
         make -f Makefile.linux vmdk
         make -f Makefile.linux cdrom
